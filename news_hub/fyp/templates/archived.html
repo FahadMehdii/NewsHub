@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Archived History</title>
+    <a href="{% url 'fyp:MainPage' %}">Main Page</a>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        h5 {
+            margin-top: 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333333;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .history-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #ffffff;
+            border: 1px solid #eaeaea;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-item:hover {
+            background-color: #f2f2f2;
+        }
+
+        .history-item a {
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 16px;
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .history-item a:hover {
+            color: #0056b3;
+        }
+
+        #delete-btn-container {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            padding: 10px;
+            z-index: 1;
+        }
+
+        #delete-btn-container button {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="delete-btn-container">
+        <button type="button" class="btn btn-danger" id="delete-btn">Delete</button>
+    </div>
+    {% if history_items %}
+        {% regroup history_items by date as grouped_items %}
+
+        {% for date in grouped_items %}
+            <h5>{{ date.grouper }}</h5>
+
+            {% for item in date.list %}
+                <div class="history-item">
+                    <label>
+                        <input type="checkbox" class="delete-checkbox">
+                        <a href="{{ item.url }}">{{ item.content }}</a>
+                        <p>{{ item.timestamp|time }}</p>
+                        <p>{{ item.user }}</p>
+                    </label>
+                </div>
+            {% endfor %}
+
+        {% empty %}
+            <p>No history items found.</p>
+        {% endfor %}
+
+    {% else %}
+        <p>No history items found.</p>
+    {% endif %}
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Handle checkbox change event
+    const deleteCheckboxes = document.querySelectorAll('.delete-checkbox');
+    const deleteButton = document.getElementById('delete-btn');
+    const deleteBtnContainer = document.getElementById('delete-btn-container');
+
+    deleteCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const checkedCheckboxes = document.querySelectorAll('.delete-checkbox:checked');
+            if (checkedCheckboxes.length > 0) {
+                deleteButton.style.display = 'block';
+            } else {
+                deleteButton.style.display = 'none';
+            }
+        });
+    });
+
+    // Handle delete button click event
+    deleteButton.addEventListener('click', () => {
+        const confirmation = confirm('Are you sure you want to delete?');
+        if (confirmation) {
+            const checkedCheckboxes = document.querySelectorAll('.delete-checkbox:checked');
+            const deleteIds = Array.from(checkedCheckboxes).map(checkbox => checkbox.parentElement.querySelector('a').getAttribute('data-id'));
+            console.log('Delete IDs:', deleteIds);
+
+            // Remove deleted items from the DOM
+            checkedCheckboxes.forEach(checkbox => {
+                const historyItem = checkbox.closest('.history-item');
+                historyItem.remove();
+            });
+
+            // Hide delete button
+            deleteButton.style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>

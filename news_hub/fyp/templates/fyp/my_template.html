@@ -1,0 +1,13 @@
+<!--{% for item in data %}-->
+<!--    <div>-->
+<!--        <p>{{ item.field1 }}</p>-->
+<!--    </div>-->
+<!--{% endfor %}-->
+{% for item in data %}
+    {% if forloop.counter <= 5 %}
+        <div>
+            <p>{{ item.field1 }}</p>
+        </div>
+    {% endif %}
+{% endfor %}
+

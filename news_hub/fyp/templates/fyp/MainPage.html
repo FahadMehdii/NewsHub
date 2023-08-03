@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+{% include 'navbar.html' %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{% static 'fyp/MainPage.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- <script src="{% static 'fyp/reload_crawl.js' %}"></script> -->
+
+</head>
+<body>
+
+{% block content %}
+    <div style="margin-left: 7em">
+        <h1>Filter News</h1>
+        <form method="get">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" value="{{ request.GET.date }}">
+            <input type="text" name="q" placeholder="Search" value="{{ request.GET.q }}">
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+{% endblock %}
+
+<div class="container" style="margin-top: 1em">
+  <h5>Top Stories</h5>
+  <div class="row">
+    <div class="col-md-8">
+      {% if bbctop_items %}
+        {% with random_geobusiness_item=bbctop_items|random %}
+          <div class="card mb-3">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{ random_geobusiness_item.image_url }}" alt="{{ random_geobusiness_item.title }}" class="card-img">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h6 class="card-title">{{ random_geobusiness_item.title }}</h6>
+                  <a href="{% if user.is_authenticated %}{% url 'fyp:update_last_visited' news_id=random_geobusiness_item.id %}{% else %}{% url 'fyp:without_history' news_id=random_geobusiness_item.id %}{% endif %}" class="card-link">{{ random_geobusiness_item.content }}</a>
+                  <div class="card-footer">
+                    {% if random_geobusiness_item.last_visited %}
+                      <p class="text-muted">Last visited: {{ random_geobusiness_item.last_visited|timesince }} ago</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endwith %}
+      {% endif %}
+      {% if dunyanewstop_items %}
+        {% with random_geobusiness_item=dunyanewstop_items|random %}
+          <div class="card mb-3">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{ random_geobusiness_item.image_url }}" alt="{{ random_geobusiness_item.title }}" class="card-img">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h6 class="card-title">{{ random_geobusiness_item.title }}</h6>
+                  <a href="{% if user.is_authenticated %}{% url 'fyp:update_last_visited' news_id=random_geobusiness_item.id %}{% else %}{% url 'fyp:without_history' news_id=random_geobusiness_item.id %}{% endif %}" class="card-link">{{ random_geobusiness_item.content }}</a>
+                  <div class="card-footer">
+                    {% if random_geobusiness_item.last_visited %}
+                      <p class="text-muted">Last visited: {{ random_geobusiness_item.last_visited|timesince }} ago</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endwith %}
+      {% endif %}
+    </div>
+    <div class="col-md-4">
+      {% if geoworld_items %}
+        {% with random_geopakistan_item=geoworld_items|random %}
+          <div class="card mb-3">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{ random_geopakistan_item.news_image }}" alt="{{ random_geopakistan_item.title }}" class="card-img">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h6 class="card-title">{{ random_geopakistan_item.title }}</h6>
+                  <a href="{% if user.is_authenticated %}{% url 'fyp:update_last_visited' news_id=random_geopakistan_item.id %}{% else %}{% url 'fyp:without_history' news_id=random_geopakistan_item.id %}{% endif %}" class="card-link">{{ random_geopakistan_item.content }}</a>
+                  <div class="card-footer">
+                    {% if random_geopakistan_item.last_visited %}
+                      <p class="text-muted">Last visited: {{ random_geopakistan_item.last_visited|timesince }} ago</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endwith %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+<section class="sections">
+    <div class="row">
+        <div style="text-align: center; margin-bottom: 2em; background-color: grey;">
+            <h2 >Your topics</h2>
+        </div>
+        <div class="col-sm">
+            <a href="#">Pakistan</a>
+            <div class="card mb-3">
+              {% if geopakistan_items and dawnpakistan_items and expresspakistan_items %}
+                {% with random_dunyanewstop_item=geopakistan_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style="margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style="margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+                {% endwith %}
+                {% with random_dunyanewstop_item=dawnpakistan_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style="margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style="margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+                {% endwith %}
+                {% with random_dunyanewstop_item=expresspakistan_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style="margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style="margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+                {% endwith %}
+              {% endif %}
+            </div>
+            </div>
+        <div class="col-sm">
+            <a href="#">Technology</a>
+            <div class="card mb-3">
+              {% if geotechnology_items and dawntechnology_items and expresstechnology_items %}
+                {% with random_dunyanewstop_item=geotechnology_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style="margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style="margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+                {% endwith %}
+                {% with random_dunyanewstop_item=dawntechnology_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style="margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style="margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+                {% endwith %}
+                {% with random_dunyanewstop_item=expresstechnology_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style="margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style="margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+                {% endwith %}
+              {% endif %}
+            </div>
+            </div>
+        <div class="col-sm">
+            <a href="#">Sports</a>
+          <div class="card mb-3">
+            {% if geosports_items and dawnsports_items and expresssports_items %}
+              {% with random_dunyanewstop_item=geosports_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% with random_dunyanewstop_item=dawnsports_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% with random_dunyanewstop_item=expresssports_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% endif %}
+            </div>
+          </div>
+        <div class="w-100"></div>
+        <div class="col-sm">
+            <a href="#">Entertainment</a>
+          <div class="card mb-3">
+            {% if geoentertainment_items and dawnworldentertainment_items and expressentertainment_items %}
+              {% with random_dunyanewstop_item=geoentertainment_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% with random_dunyanewstop_item=dawnworldentertainment_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% with random_dunyanewstop_item=expressentertainment_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% endif %}
+        </div>
+        </div>
+        <div class="col-sm">
+            <a href="#">Business</a>
+          <div class="card mb-3">
+            {% if geobusiness_items and dawnbusiness_items and expressbusiness_items %}
+              {% with random_dunyanewstop_item=geobusiness_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% with random_dunyanewstop_item=dawnbusiness_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% with random_dunyanewstop_item=expressbusiness_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% endif %}
+        </div>
+        </div>
+        <div class="col-sm">
+          <a href="#">World</a>
+          <div class="card mb-3">
+            {% if geoworld_items and dawnworld_items and expressworld_items %}
+              {% with random_dunyanewstop_item=geoworld_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% with random_dunyanewstop_item=dawnworld_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% with random_dunyanewstop_item=expressworld_items|random %}
+                <div class="row g-0">
+                  <div class="col-md-10" style="margin-top: -2em">
+                    <img src="{{ random_dunyanewstop_item.news_image }}" alt="{{ random_dunyanewstop_item.news_image }}" class="card-img" style="width: 20px; height: 20px; margin-bottom: -4.5em; margin-left: 1em;">
+                    <div class="card-body">
+                      <h6 style=" margin-left: 1.5em;" class="card-title">{{ random_dunyanewstop_item.title }}</h6>
+                      {% if user.is_authenticated %}
+                      <a href="{% url 'fyp:update_last_visited' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% else %}
+                      <a href="{% url 'fyp:without_history' news_id=random_dunyanewstop_item.id %}" class="card-link">{{ random_dunyanewstop_item.content }}</a>
+                      {% endif %}
+                      <div class="">
+                        {% if random_dunyanewstop_item.last_visited %}
+                        <p class="text-muted">Last visited: {{ random_dunyanewstop_item.last_visited|timesince }} ago</p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2" style=" margin-top: 2em; margin-left: -0.7em">
+                    <img style="" src="{{ random_dunyanewstop_item.image_url }}" alt="{{ random_dunyanewstop_item.image_url }}" class="card-img">
+                  </div>
+                </div>
+              {% endwith %}
+              {% endif %}
+            </div>
+        </div>
+    </div>
+    </section>
+</body>
+</html>

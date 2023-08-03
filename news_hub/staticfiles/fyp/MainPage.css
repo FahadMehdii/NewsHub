@@ -1,0 +1,32 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+}
+
+.sections .col-sm {
+  width: 100%;
+  margin: 0 auto;
+  max-height: auto;
+  max-width: 22em;
+  margin-left: 2em;
+}
+
+.sections .col-sm a {
+  display: block;
+  font-size: 14px;
+  color: gray;
+  font-weight: 700;
+  text-align: justify;
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.sections .col-sm a:hover,
+.sections .col-sm a:active {
+  background-color: purple;
+  color: white;
+}
+
+

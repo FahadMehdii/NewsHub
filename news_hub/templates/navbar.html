@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <style>
+
+      body {
+        background-color: #f1f1f1;
+      }
+
+      .navbar {
+        margin-bottom: 0;
+      }
+      .custom-navbar {
+        background-color: lightgray /* Replace with your desired color */
+        
+      }
+   
+
+      .nav-link {
+        font-weight: bold;
+        color:inherit !important;
+      }
+
+      .nav-link:hover {
+        color: #000;
+        text-decoration: none;
+      }
+
+      .navbar-brand {
+        color: #555;
+        font-weight: bold;
+        font-size: 24px;
+      }
+
+      .dropdown {
+        position: relative;
+       
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        top: 100%;
+        width: 100px;
+        padding: 8px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+      
+      .dropdown .dropdown-content a{
+        color: #000;
+        font-size: small;
+        font-family: 'Times New Roman', Times, serif;
+        display:block;
+      }
+      .dropdown .dropdown-content a:hover {
+        background-color: #000;
+        color: #f1f1f1;
+        width: fit-content;
+      }
+      .dropdown-item {
+        padding: 4px 0;
+        cursor: pointer;
+      }
+
+      .dropdown-item:hover {
+        color: #555;
+      }
+    </style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>News Hub</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Css -->
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg custom-navbar my-navbar">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'fyp:MainPage' %}">News Hub</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+          <ul class="navbar-nav">
+              <li class="nav-item">
+              <a class="nav-link" href="{% url 'fyp:PakistanPage' %}">Pakistan</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'fyp:TechnologyPage' %}">Technology</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'fyp:SportsPage' %}">Sports</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'fyp:EntertainmentPage' %}">Entertainment</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'fyp:BusinessPage' %}">Business</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'fyp:WorldPage' %}">World</a>
+            </li>
+          </ul>
+        </div>
+        <div class="dropdown">
+            {% if user.is_authenticated %}
+              <button style="font-weight: bold;" class="dropdown-item">{{ user.get_username }}</button>
+              <div class="dropdown-content">
+                <a href="{% url 'fyp:execute_scrapy_command' %}">Reload News</a>
+                <a href="{% url 'fyp:history_list' %}?next={{ request.path }}">History</a>
+                <a href="{% url 'logout' %}?next={{ request.path }}">Logout</a>
+                <a href="#">Item 4</a>
+                <a href="#">Item 5</a>
+              </div>
+            {% else %}
+              <button style="font-weight: bold;" class="dropdown-item">Menu</button>
+              <div class="dropdown-content">
+                <a href="{% url 'login' %}?next={{ request.path }}">Login</a>
+                <a href="#">Item 3</a>
+                <a href="#">Item 4</a>
+                <a href="#">Item 5</a>
+              </div>
+            {% endif %}
+          </div>
+        
+      </div>
+    </nav>
+
+     <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNS" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/n/nJGzIxFDsf4x0xIM+b0PJj" crossorigin="anonymous"></script>
+
